@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connection Setup</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.screen {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 25px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* FIRST SCREEN */
+#introScreen {
+    background: linear-gradient(135deg, #fff0f5, #fffdf4, #e6f8ff);
+    color: #252525;
+}
+
+.smile {
+    font-size: clamp(100px, 25vw, 165px);
+    animation: bounce 1.5s infinite;
+}
+
+.intro-title {
+    margin-top: 22px;
+    font-size: clamp(24px, 5vw, 36px);
+    font-weight: 600;
+}
+
+#countdown {
+    margin-top: 30px;
+    font-size: 65px;
+    font-weight: bold;
+    color: #128C7E;
+}
+
+/* SETUP SCREEN */
+#loadingScreen {
+    position: relative;
+    overflow: hidden;
+    color: white;
+    background: radial-gradient(circle at top, #128C7E, #075E54 60%, #043f39);
+}
+
+#loadingScreen::before,
+#loadingScreen::after {
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border: 1px solid #ffffff13;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+#loadingScreen::before {
+    top: -120px;
+    left: -100px;
+    box-shadow: 0 0 0 35px #ffffff05, 0 0 0 70px #ffffff05;
+}
+
+#loadingScreen::after {
+    bottom: -140px;
+    right: -100px;
+    box-shadow: 0 0 0 35px #ffffff05, 0 0 0 70px #ffffff05;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* LOGO */
+.logo {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+    animation: logoAppear 1s ease;
+}
+
+.brand {
+    font-size: 36px;
+    letter-spacing: -1px;
+}
+
+.subtitle {
+    margin-top: 12px;
+    color: #d7f5e9;
+    font-size: 14px;
+}
+
+/* SECURITY CHECK */
+.security-card {
+    width: 100%;
+    margin-top: 30px;
+    padding: 18px;
+    background: #ffffff0c;
+    border: 1px solid #ffffff24;
+    border-radius: 16px;
+    text-align: left;
+}
+
+.security-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 17px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.pulse-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #25D366;
+    box-shadow: 0 0 0 5px #25D36620;
+    animation: pulse 1.2s infinite;
+}
+
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 13px 0;
+    font-size: 13px;
+    color: #d8eee8;
+    opacity: 0.4;
+    transition: opacity 0.4s;
+}
+
+.check-item.active {
+    opacity: 1;
+}
+
+.check-item .check-icon {
+    width: 20px;
+    color: #25D366;
+    font-weight: bold;
+}
+
+.check-item.done .check-icon::after {
+    content: "✓";
+}
+
+.check-item.done {
+    color: white;
+    opacity: 1;
+}
+
+/* PROGRESS */
+.progress-label {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    font-size: 13px;
+}
+
+.progress-track {
+    width: 100%;
+    height: 9px;
+    margin-top: 12px;
+    background: #ffffff30;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #25D366;
+    border-radius: 20px;
+    box-shadow: 0 0 12px #25D36670;
+    transition: width 0.08s linear;
+}
+
+#progressText {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* PHONE ANIMATION */
+.phone {
+    margin-top: 22px;
+    font-size: 24px;
+    animation: floatPhone 2s ease-in-out infinite;
+}
+
+#statusText {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #d7f5e9;
+    min-height: 18px;
+}
+
+/* ANIMATIONS */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+@keyframes logoAppear {
+    from { opacity: 0; transform: scale(0.6); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+    50% { box-shadow: 0 0 0 9px #25D36608; }
+}
+
+@keyframes floatPhone {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* THIRD SCREEN */
+.success-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: linear-gradient(145deg, #075E54, #064c44);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+    animation: successAppear 0.8s ease;
+}
+
+.success-icon {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: #25D366;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    margin-bottom: 25px;
+    box-shadow: 0 0 35px #25D36650;
+}
+
+.success-screen h2 {
+    font-size: clamp(24px, 5vw, 32px);
+    margin-bottom: 20px;
+}
+
+.success-screen p {
+    max-width: 450px;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #e1f5ee;
+}
+
+.success-note {
+    margin-top: 30px;
+    padding: 12px 18px;
+    border: 1px solid #ffffff35;
+    border-radius: 30px;
+    font-size: 14px;
+}
+
+.success-note span {
+    color: #25D366;
+    margin-right: 8px;
+}
+
+@keyframes successAppear {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- INTRO SCREEN -->
+<section id="introScreen" class="screen">
+    <div class="smile">😊</div>
+    <h1 class="intro-title">im getting into you</h1>
+    <div id="countdown">10</div>
+</section>
+
+<!-- ANIMATED SETUP SCREEN -->
+<section id="loadingScreen" class="screen hidden">
+
+    <div class="content">
+
+        <!-- WhatsApp-inspired icon, not an official account connection -->
+        <svg class="logo" viewBox="0 0 100 100"
+             xmlns="http://www.w3.org/2000/svg"
+             aria-label="WhatsApp-inspired icon" role="img">
+            <path d="M18 78 L23 62 A34 34 0 1 1 37 77 Z"
+                  fill="#25D366" stroke="white"
+                  stroke-width="5" stroke-linejoin="round"/>
+            <path d="M39 31 Q34 29 32 36 Q29 45 43 58
+                     Q56 71 66 61 Q70 56 65 53
+                     L56 49 L51 55 Q43 51 39 43 L43 38 Z"
+                  fill="white"/>
+        </svg>
+
+        <h1 class="brand">WhatsApp</h1>
+        <p class="subtitle">Connection setup simulation</p>
+
+        <!-- Fake animated security checks -->
+        <div class="security-card">
+
+            <div class="security-heading">
+                <span class="pulse-dot"></span>
+                <span>Security check</span>
+            </div>
+
+            <div class="check-item" id="check1">
+                <span class="check-icon">○</span>
+                <span>Initializing connection...</span>
+            </div>
+
+            <div class="check-item" id="check2">
+                <span class="check-icon">○</span>
+                <span>Checking device compatibility...</span>
+            </div>
+
+            <div class="check-item" id="check3">
+                <span class="check-icon">○</span>
+                <span>Preparing secure session...</span>
+            </div>
+
+            <div class="check-item" id="check4">
+                <span class="check-icon">○</span>
+                <span>Finishing setup...</span>
+            </div>
+
+        </div>
+
+        <!-- Loading progress -->
+        <div class="progress-label">
+            <span>Loading</span>
+            <span id="progressText">0%</span>
+        </div>
+
+        <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <div class="phone">📱</div>
+        <p id="statusText">Please wait...</p>
+
+    </div>
+</section>
+
+<!-- THIRD SCREEN: COMPLETION MESSAGE
+     This must be outside loadingScreen so it remains visible
+     when the loading screen is hidden. -->
+<div id="successScreen" class="success-screen hidden">
+    <div class="success-icon">✓</div>
+
+    <h2>Setup Completed Successfully!</h2>
+
+    <p>
+        Set up your account to new device completed successful,
+        now you can manage your linked device through settings
+        of your account.
+    </p>
+
+    <div class="success-note">
+        <span>✓</span> Setup simulation finished
+    </div>
+</div>
+
+<script>
+const introScreen = document.getElementById("introScreen");
+const loadingScreen = document.getElementById("loadingScreen");
+const countdownDisplay = document.getElementById("countdown");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+const statusText = document.getElementById("statusText");
+
+const checks = [
+    document.getElementById("check1"),
+    document.getElementById("check2"),
+    document.getElementById("check3"),
+    document.getElementById("check4")
+];
+
+let seconds = 10;
+
+/* COUNT DOWN FROM 10 TO 0 */
+const countdownTimer = setInterval(() => {
+    seconds--;
+    countdownDisplay.textContent = seconds;
+
+    if (seconds <= 0) {
+        clearInterval(countdownTimer);
+        introScreen.classList.add("hidden");
+        loadingScreen.classList.remove("hidden");
+        startLoading();
+    }
+}, 1000);
+
+/* ANIMATE PROGRESS AND SECURITY CHECKS */
+function startLoading() {
+    let progress = 0;
+
+    const messages = [
+        "Initializing connection...",
+        "Checking device compatibility...",
+        "Preparing secure session...",
+        "Finishing setup..."
+    ];
+
+    statusText.textContent = messages[0];
+
+    const loadingTimer = setInterval(() => {
+        progress++;
+
+        progressBar.style.width = progress + "%";
+        progressText.textContent = progress + "%";
+
+        // Complete one check at each 25% milestone.
+        const completedChecks = Math.min(
+            4,
+            Math.floor(progress / 25)
+        );
+
+        checks.forEach((check, index) => {
+            if (index < completedChecks) {
+                check.classList.add("done");
+                check.classList.remove("active");
+            } else if (index === completedChecks && progress < 100) {
+                check.classList.add("active");
+            } else {
+                check.classList.remove("active");
+            }
+        });
+
+        const messageIndex = Math.min(
+            3,
+            Math.floor(progress / 25)
+        );
+
+        statusText.textContent = messages[messageIndex];
+
+        
+if (progress >= 100) {
+    clearInterval(loadingTimer);
+
+    statusText.textContent = "Setup simulation complete.";
+
+    // Show the new completion screen after a short pause.
+    setTimeout(() => {
+        loadingScreen.classList.add("hidden");
+
+        document.getElementById("successScreen")
+            .classList.remove("hidden");
+    }, 1200);
+}
+
+    }, 80);
+}
+</script>
+
+</body>
+</html>
